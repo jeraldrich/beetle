@@ -1,0 +1,79 @@
+version: '3'
+
+services:
+
+  scylla-node1:
+    container_name: scylla-node1
+    image: scylladb/scylla
+    restart: always
+    command: --seeds=scylla-node1,scylla-node2 --smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
+    volumes:
+      - type: volume
+        source: ./scylla_config/scylla.yaml
+        target: /var/lib/scylla
+        volume:
+          nocopy: true
+      - type: volume
+        source: ./scylla_config/cassandra-rackdc.properties.dc1
+        target: /var/lib/scylla
+        volume:
+          nocopy: true
+      - type: volume
+        source: ./scylla_config/mutant-data.txt
+        target: /var/lib/scylla
+        volume:
+          nocopy: true
+    networks:
+      web:
+
+  scylla-node2:
+    container_name: scylla-node2
+    image: scylladb/scylla
+    restart: always
+    command: --seeds=scylla-node1,scylla-node2 --smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
+    volumes:
+      - type: volume
+        source: ./scylla_config/scylla.yml
+        target: /var/lib/scylla
+        volume:
+          nocopy: true
+      - type: volume
+        source: ./scylla_config/cassandra-rackdc.properties.dc1
+        target: /var/lib/scylla
+        volume:
+          nocopy: true
+      - type: volume
+        source: ./scylla_config/mutant-data.txt
+        target: /var/lib/scylla
+        volume:
+          nocopy: true
+    networks:
+      web:
+
+  scylla-node3:
+    container_name: scylla-node3
+    image: scylladb/scylla
+    restart: always
+    command: --seeds=scylla-node1,scylla-node2 --smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
+    volumes:
+      - type: volume
+        source: ./scylla_config/scylla.yaml
+        target: /var/lib/scylla
+        volume:
+          nocopy: true
+      - type: volume
+        source: ./scylla_config/cassandra-rackdc.properties.dc1
+        target: /var/lib/scylla
+        volume:
+          nocopy: true
+      - type: volume
+        source: ./scylla_config/mutant-data.txt
+        target: /var/lib/scylla
+        volume:
+          nocopy: true
+    networks:
+      web:
+
+networks:
+  web:
+    driver: bridge

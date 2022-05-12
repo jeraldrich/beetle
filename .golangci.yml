@@ -1,0 +1,59 @@
+run:
+  timeout: 30s
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  fix: true
+  include:
+    - EXC0012
+    - EXC0014
+
+linters-settings:
+  # see https://go-critic.com/overview.html
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - hugeParam # Micro-optimisations
+      - rangeValCopy # Micro-optimisations
+      - ifElseChain # Mostly false positives
+      - ptrToRefParam # False positives?
+      - importShadow # Probably not worth the hassle...
+  depguard:
+    include-go-root: true
+    packages:
+      - "io/ioutil"
+
+linters:
+  disable-all: true
+  enable:
+    # Default linters reported by `golangci-lint help linters` in v1.41.1
+    - deadcode
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unused
+    - varcheck
+    # Extra linters:
+    - gofmt
+    - goimports
+    - gocritic
+    - revive
+    - stylecheck
+    - unconvert
+    - durationcheck
+    - wastedassign
+    - depguard
+    - bodyclose
+    - gosec
+    - misspell
+    # - prealloc
