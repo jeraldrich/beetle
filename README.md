@@ -36,8 +36,6 @@ Connected to Test Cluster at 172.17.0.2:9042.
 Use HELP for help.
 cqlsh>
 
-Take note of the ip and port number. If may need to input the value at cluster := gocql.NewCluster("172.17.0.2:9042")
-
 Make a cluster
 $ docker run --name beetledb2  --hostname beetledb2 -d scylladb/scylla --seeds="$(docker inspect --format='{{ .NetworkSettings.IPAddress }}' beetledb)"
 

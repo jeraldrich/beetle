@@ -8,7 +8,10 @@ import (
 )
 
 func TestScylla(t *testing.T) {
+	// cfg := gocql.ClusterConfig{Hosts: []string{"127.0.0.1"}, Port: 9042}
 	cluster := gocqlxtest.CreateCluster()
+	cluster.Hosts = []string{"127.0.0.1"}
+	cluster.Port = 9042
 
 	session, err := gocqlx.WrapSession(cluster.CreateSession())
 	if err != nil {
