@@ -1,11 +1,30 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
+	"net/http"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 )
+
+func readCSVFromUrl(url string) ([][]string, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+	reader := csv.NewReader(resp.Body)
+	reader.Comma = ';'
+	data, err := reader.ReadAll()
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
 
 func main() {
 	host := "127.0.0.1:9042"
@@ -21,6 +40,7 @@ func main() {
 	err = session.Query("SELECT release_version FROM system.local", nil).Get(&releaseVersion)
 	if err != nil {
 		fmt.Printf("Not able to connect to scylla host: [%s]", host)
+		panic(err)
 	}
 
 	err = InitializeMessagesKeyspace(session)
