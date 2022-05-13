@@ -8,6 +8,8 @@ services:
     command: --seeds=scylla-node1,scylla-node2 --smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
     volumes:
       - $PWD/scylla_config
+    ports:
+      - "9042:9042"
     networks:
       web:
         aliases:
@@ -41,4 +43,3 @@ services:
 networks:
   web:
     driver: bridge
-  bridge:
