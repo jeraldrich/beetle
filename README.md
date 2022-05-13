@@ -2,7 +2,7 @@
 Beetle (WIP)
 ===================
 
-High performance ETL implemented in golang concurrent fan in/out pattern and scylla node clusters.
+High performance ETL implemented in golang concurrent fan-out pattern and scylla node clusters.
 
 
 ## Setting Up Local Development Environment
