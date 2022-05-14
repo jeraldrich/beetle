@@ -59,7 +59,6 @@ func (f *Filter) Uuid(input string) (uuid gocql.UUID, err error) {
 		fmt.Printf("Invalid UUID %s", input)
 		var blankUuid [16]byte
 		return blankUuid, err
-		// panic(err) # AHHHHH
 	}
 
 	return result, err
