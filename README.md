@@ -17,7 +17,7 @@ I did some research on cassandra and scylla as alternatives, but I found the scy
 
 ### Running Beetle
 * Start scylla node cluster: `docker compose up`
-* Configure which sources your producers will fetch from in producers.cfg
+* Configure which sources your producers will get data from in producers.cfg
 * Run bettle: `go run .`
 * If you want to compile a binary and run: `mkdir -p bin && go build -o bin/beetle && bin/beetle`
 
