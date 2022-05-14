@@ -5,7 +5,7 @@ High performance ETL implemented in golang concurrent fan-out pattern and scylla
 
 I was inspired by reading https://discord.com/blog/how-discord-stores-billions-of-messages
 
-I ran into the same situation with mongo in that once you have around 2TB of data, the read performance was heavily impacted by writes. When I used sharding, I had dropped consistency issues - even when I adjusted the write concerns.
+I ran into the same situation with mongo in that after 1TB+ of data, the read performance was heavily impacted by writes. When I used sharding, I had dropped consistency issues - even when I adjusted the write concerns.
 
 I did some research on cassandra and scylla as alternatives, but I found the scylladb query builder makes it easy to grasp for developers not familiar with column store databases: https://github.com/scylladb/gocqlx
 
@@ -18,7 +18,7 @@ I did some research on cassandra and scylla as alternatives, but I found the scy
 
 ### Configure and Run Scylla Cluster
 
-I created a docker compose file which will take the files in scylla_config and create 3 containerized scylla nodes networked with each other. The host machcine can start a scylla session at 127.0.0.1:9042
+I created a docker compose file which will take the files in scylla_config and create 3 containerized scylla nodes networked with each other. The host machine can start a scylla session at 127.0.0.1:9042
 
 * Start scylla node cluster: `docker compose up`
 
