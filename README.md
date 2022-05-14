@@ -21,9 +21,8 @@ I did some research on cassandra and scylla as alternatives, but I found the scy
 * Run bettle: `go run .`
 * If you want to compile a binary and run: `mkdir -p bin && go build -o bin/beetle && bin/beetle`
 
-This is not necessary to run, but if you want to generate a schema (outputs a go file) to see all metadata (columns, parkeys, sortkeys) do this:
+This is not necessary to run, but if you want to generate a go file to see all scylla's table metadata (columns, parkeys, sortkeys) do this:
 ### Generating table metadata (columns, partkeys, sortkeys) from scylla
-* go get -u "github.com/scylladb/gocqlx/v2/cmd/schemagen"
-* $GOBIN/schemagen -cluster="127.0.0.1:9042" -keyspace="messages" -output="schema" -pkgname="schema"
-
-Make sure you have $GOBIN defined in your path or you may run java's schemagen if you have java on your system.
+* Install gocqlx's schemagen: `go get -u "github.com/scylladb/gocqlx/v2/cmd/schemagen"`
+* If you have java, make sure you have $GOBIN defined in your path (location to your go bin directory) or you may run java's schemagen
+* generate schema go file: `$GOBIN/schemagen -cluster="127.0.0.1:9042" -keyspace="messages" -output="schema" -pkgname="schema"`
