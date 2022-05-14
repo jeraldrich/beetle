@@ -1,46 +1,50 @@
 package main
 
 import (
-	"database/sql"
-
 	"github.com/gocql/gocql"
 )
 
-type Messages struct {
-	Messages []Message // `json:"messages"`
+type Configuration struct {
+	messagesDataUrls []string
 }
 
 type Message struct {
-	ID                 gocql.UUID     `json:"id"`
-	created_at         string         `json:"created_at"`
-	updated_at         string         `json:"updated_at"`
-	send_at            string         `json:"send_at"`
-	sent_at            string         `json:"sent_at"`
-	from_user_id       gocql.UUID     `json:"from_user_id"`
-	to_user_id         gocql.UUID     `json:"to_user_id"`
-	body               string         `json:"body"`
-	state              string         `json:"state"`
-	read_at            string         `json:"read_at"`
-	sent_automatically bool           `json:"sent_automatically"`
-	tag                string         `json:"tag"`
-	message_type       string         `json:"type"`
-	associated_type    string         `json:"associated_type"`
-	associated_id      gocql.UUID     `json:"associated_id"`
-	is_flagged         bool           `json:"is_flagged"`
-	slack_ts           sql.NullString `json:"slack_ts"`
-	channel_id         gocql.UUID     `json:"channel_id"`
-	canceled_at        sql.NullString `json:"canceled_at"`
-	deleted_at         sql.NullString `json:"deleted_at"`
-	attributes         sql.NullString `json:"attributes"`
-	acted_on_at        sql.NullString `json:"acted_on_at"`
-	sender_user_id     sql.NullString `json:"sender_user_id"`
-	correlation_id     sql.NullString `json:"correlation_id"`
-	sub_type           sql.NullString `json:"sub_type"`
-	viewed_at          sql.NullString `json:"viewed_at"`
-	viewed_duration    int            `json:"viewed_duration"`
-	urls               sql.NullString `json:"urls"`
-	duration           int            `json:"duration"`
-	paused_at          sql.NullString `json:"paused_at"`
-	delivery_type      sql.NullString `json:"delivery_type"`
-	notification_count int            `json:"notification_count"`
+	ID                gocql.UUID `json:"id"`
+	CreatedAt         string     `json:"created_at"`
+	UpdatedAt         string     `json:"updated_at"`
+	SendAt            string     `json:"send_at"`
+	SentAt            string     `json:"sent_at"`
+	FromUserId        gocql.UUID `json:"from_user_id"` // can be uuid or 00000000-0000-0000-0000-000000000000
+	ToUserId          gocql.UUID `json:"to_user_id"`   // can be uuid or 00000000-0000-0000-0000-000000000000
+	Body              string     `json:"body"`
+	State             string     `json:"state"`
+	ReadAt            string     `json:"read_at"`
+	SentAutomatically bool       `json:"sent_automatically"`
+	Tag               string     `json:"tag"`
+	MessageType       string     `json:"type"`
+	AssociatedType    string     `json:"associated_type"`
+	AssociatedId      string     `json:"associated_id"` // can be uuid, 00000000-0000-0000-0000-000000000000 or null
+	IsFlagged         bool       `json:"is_flagged"`
+	SlackTs           string     `json:"slack_ts"`       // Nullstring
+	ChannelId         string     `json:"channel_id"`     // can be uuid, 00000000-0000-0000-0000-000000000000 or null
+	CanceledAt        string     `json:"canceled_at"`    // Nullstring
+	DeletedAt         string     `json:"deleted_at"`     // Nullstring
+	Attributes        string     `json:"attributes"`     // Nullstring
+	ActedOnAt         string     `json:"acted_on_at"`    // Nullstring
+	SenderUserId      string     `json:"sender_user_id"` // Nullstring
+	CorrelationId     string     `json:"correlation_id"` // Nullstring
+	SubType           string     `json:"sub_type"`       // Nullstring
+	ViewedAt          string     `json:"viewed_at"`      // Nullstring
+	ViewedDuration    int        `json:"viewed_duration"`
+	Urls              string     `json:"urls"` // Nullstring
+	Duration          int        `json:"duration"`
+	PausedAt          string     `json:"paused_at"`     // Nullstring
+	DeliveryType      string     `json:"delivery_type"` // Nullstring
+	NotificationCount int        `json:"notification_count"`
+
+	// Used to store validation errors when filtering through all message results.
+	// Want to store this in db at some point to report bad imports.
+	// TODO: Refactor to map, or array of errors.
+	dirty_fields      bool
+	dirty_field_error error
 }

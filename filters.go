@@ -17,8 +17,6 @@ type Cleaner interface {
 	Uuid(input string) (uuid gocql.UUID, err error)
 }
 
-// NewFilter configures filter with extenable cleaner methods
-// TODO: Implement filter results, cleaner formatting options
 func NewFilter() *Filter {
 	c := new(Cleaner)
 	return &Filter{c}

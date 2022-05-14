@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
@@ -27,14 +28,19 @@ func main() {
 		panic(err)
 	}
 
-	// TODO: move to producers channel, load urls from a configuration file or args'
+	// TODO: setup consumer, setup consumer channel pool
 	producer := NewProducer()
 	messages, err := producer.GetMessagesFromUrl("")
 	if err != nil {
 		panic(err)
 	}
+	log.Println(messages)
 
-	fmt.Println(messages)
+	consumer := NewConsumer()
+	messages, success_count, error_count := consumer.FilterMessages(messages)
+	log.Printf("Filtered %d messages: success[%d] error_count[%d]", len(messages), success_count, error_count)
+
+	// err = consumer.CreateMessages(messages)
 }
 
 func InitializeMessagesKeyspace(session gocqlx.Session) (err error) {
