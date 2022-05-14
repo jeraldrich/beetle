@@ -22,7 +22,7 @@ I created a docker compose file which will take the files in scylla_config and c
 
 * Start scylla node cluster: `docker compose up`
 
-![ScreenShot](https://github.com/jeraldrich/beetle/blob/master/docker_scylla_cluster.png)
+![ScreenShot](https://github.com/jeraldrich/beetle/blob/main/docker_scylla_cluster.png)
 
 
 ### Configure and Run Beetle
