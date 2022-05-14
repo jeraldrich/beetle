@@ -15,9 +15,19 @@ I did some research on cassandra and scylla as alternatives, but I found the scy
 * Install golang: `brew install golang`
 * Install Docker: `brew install homebrew/cask/docker`
 
-### Running Beetle
+
+### Configure and Run Scylla Cluster
+
+I created a docker compose file which will take the files in scylla_config and create 3 containerized scylla nodes networked with each other. The host machcine can start a scylla session at 127.0.0.1:9042
+
 * Start scylla node cluster: `docker compose up`
-* Configure which sources your producers will fetch from in producers.cfg
+
+![ScreenShot](https://github.com/jeraldrich/beetle/blob/master/docker_scylla_cluster.png)
+
+
+### Configure and Run Beetle
+* Start scylla node cluster: `docker compose up`
+* Configure which sources your producers will get data from in producers.cfg
 * Run bettle: `go run .`
 * If you want to compile a binary and run: `mkdir -p bin && go build -o bin/beetle && bin/beetle`
 
