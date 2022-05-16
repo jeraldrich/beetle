@@ -22,6 +22,7 @@ func NewConsumer() *Consumer {
 	return &Consumer{a}
 }
 
+// Transform any fields in all messages to be scylla friendly.
 func (p *Consumer) FilterMessages(messages []Message) (t []TransformedMessage, success_count int, error_count int) {
 	filter := NewFilter()
 	transformedMessages := []TransformedMessage{}
@@ -70,9 +71,6 @@ func (p *Consumer) FilterMessages(messages []Message) (t []TransformedMessage, s
 		// Loops through fieldsToFilter to match with message and transformedMessage fields.
 		// Transform the value from message and set in transformedMessage.
 		for filterFieldName, filterType := range fieldsToFilter {
-			messageReflectValue := reflect.ValueOf(&message).Elem()
-			messageFieldValue := messageReflectValue.FieldByName(filterFieldName)
-
 			transformReflectValue := reflect.ValueOf(&transformedMessage).Elem()
 			transformFieldValue := transformReflectValue.FieldByName(filterFieldName)
 
