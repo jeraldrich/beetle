@@ -72,14 +72,14 @@ func main() {
 		panic(err)
 	}
 
-	// producerChannel := make(chan string)
+	// Create consumer channel ready to listen for each url
 	var wg sync.WaitGroup
 	consumerChannel := make(chan []Message)
-
 	for i := 0; i < len(config.JsonDataUrls); i++ {
 		wg.Add(1)
 		go Consume(&wg, consumerChannel, session)
 	}
+	// Retrieve url and send parsed messages to listening consumer channel
 	Produce(consumerChannel, config.JsonDataUrls)
 
 	wg.Wait()

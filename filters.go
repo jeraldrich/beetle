@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"errors"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -37,8 +37,8 @@ func (f *Filter) DatetimeString(datetimeInput string) (iso8601 time.Time, err er
 
 	isoConvertedInput, err := datetime.Parse(datetimeInput, time.UTC)
 	if err != nil {
-		// TODO: Better exception handling for incorrectly formatted dates.
-		fmt.Printf("Failed converting datetime string to iso8601: [%s]", datetimeInput)
+		// Track 2022/05/16 09:37:27 as field value error.
+		err = errors.New("Invalid datetime. Not Iso OR rfc")
 		return blankTime, err
 	}
 

@@ -88,15 +88,13 @@ func (p *Consumer) FilterMessages(messages []Message) (t []TransformedMessage, s
 					transformFieldValue.Set(reflect.ValueOf(filteredUuid))
 				}
 			case "datetime":
-				// TODO: Handle 2022/05/16
 				filteredDatetime, err = filter.DatetimeString(messageFieldValue.String())
 				if !filteredDatetime.IsZero() && err == nil {
 					// log.Println("setting filtered date for fieldname ", filterFieldName, filteredDatetime)
 					transformFieldValue.Set(reflect.ValueOf(filteredDatetime))
 				}
 			}
-			if err != nil && filteredUuid != blankUuid && !filteredDatetime.IsZero() {
-				// if err != nil {
+			if err != nil && filteredUuid != blankUuid && !filteredDatetime.IsZero() || err != nil && err.Error() == "Invalid datetime. Not Iso OR rfc" {
 				log.Printf("error when cleaning message field name [%s]: %s", filterFieldName, err)
 				// Set dirty fields so we can later store then in seperate table.
 				error_count += 1
