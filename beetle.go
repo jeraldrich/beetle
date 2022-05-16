@@ -5,10 +5,39 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 )
+
+func Produce(consumerChannel chan<- []Message, urls []string) {
+	for i := 0; i < len(urls); i++ {
+		url := urls[i]
+		producer := NewProducer()
+		messages, err := producer.GetMessagesFromUrl(url)
+		if err != nil {
+			panic(err)
+		}
+		consumerChannel <- messages
+	}
+
+	close(consumerChannel)
+}
+
+func Consume(wg *sync.WaitGroup, consumerChannel <-chan []Message, session gocqlx.Session) {
+	defer wg.Done()
+	consumer := NewConsumer()
+	transformedMessages := []TransformedMessage{}
+	messages := <-consumerChannel
+	transformedMessages, success_count, error_count := consumer.FilterMessages(messages)
+	log.Printf("Filtered %d messages: success[%d] error_count[%d]", len(messages), success_count, error_count)
+
+	err := consumer.CreateMessages(transformedMessages, session)
+	if err != nil {
+		panic(err)
+	}
+}
 
 func main() {
 	host := "127.0.0.1:9042"
@@ -32,7 +61,7 @@ func main() {
 	// Create keyspace, drop existing messages table, and create messages table.
 	err = InitializeMessagesKeyspace(session)
 	if err != nil {
-		panic(err)
+		panic(err) // AHHHHH!
 	}
 	err = DropMessagesTable(session)
 	if err != nil {
@@ -43,22 +72,17 @@ func main() {
 		panic(err)
 	}
 
-	// TODO: setup consumer, setup consumer channel pool
-	producer := NewProducer()
-	messages, err := producer.GetMessagesFromUrl(config.JsonDataUrls[0])
-	if err != nil {
-		panic(err)
-	}
+	// producerChannel := make(chan string)
+	var wg sync.WaitGroup
+	consumerChannel := make(chan []Message)
 
-	consumer := NewConsumer()
-	transformedMessages := []TransformedMessage{}
-	transformedMessages, success_count, error_count := consumer.FilterMessages(messages)
-	log.Printf("Filtered %d messages: success[%d] error_count[%d]", len(messages), success_count, error_count)
-
-	err = consumer.CreateMessages(transformedMessages, session)
-	if err != nil {
-		panic(err)
+	for i := 0; i < len(config.JsonDataUrls); i++ {
+		wg.Add(1)
+		go Consume(&wg, consumerChannel, session)
 	}
+	Produce(consumerChannel, config.JsonDataUrls)
+
+	wg.Wait()
 }
 
 func InitializeMessagesKeyspace(session gocqlx.Session) (err error) {
@@ -71,6 +95,7 @@ func InitializeMessagesKeyspace(session gocqlx.Session) (err error) {
 }
 
 func InitializeMessagesTable(session gocqlx.Session) (err error) {
+	// attributes is set as text, but stores json just fine and can be unmarshalled.
 	err = session.ExecStmt(`CREATE TABLE IF NOT EXISTS production_db.messages (
 		id uuid PRIMARY KEY,
 		created_at timestamp,

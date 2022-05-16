@@ -95,7 +95,8 @@ func (p *Consumer) FilterMessages(messages []Message) (t []TransformedMessage, s
 					transformFieldValue.Set(reflect.ValueOf(filteredDatetime))
 				}
 			}
-			if err != nil {
+			if err != nil && filteredUuid != blankUuid && !filteredDatetime.IsZero() {
+				// if err != nil {
 				log.Printf("error when cleaning message field name [%s]: %s", filterFieldName, err)
 				// Set dirty fields so we can later store then in seperate table.
 				error_count += 1

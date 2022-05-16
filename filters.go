@@ -43,7 +43,7 @@ func (f *Filter) DatetimeString(datetimeInput string) (iso8601 time.Time, err er
 	}
 
 	// If the input matches the converted without microseconds, then return the input.
-	// Using RFC 3339 to compare since datetime standard libray has trouble with some ISO.
+	// Using RFC 3339 to compare since datetime standard library has trouble with some ISO.
 	// Otherwise, the time.parse called at the beginning will incorrectly
 	// add 1-3 microseconds based off duraction of the method.
 	convertedFromIsoToRfc, err := time.Parse(rfcTemplate, isoConvertedInput.Format(rfcTemplate))
@@ -60,7 +60,7 @@ func (f *Filter) Uuid(input string) (uuid gocql.UUID, err error) {
 	result, err := gocql.ParseUUID(input)
 
 	if err != nil {
-		fmt.Printf("Invalid UUID %s", input)
+		// fmt.Printf("Invalid UUID %s", input)
 		var blankUuid [16]byte
 		return blankUuid, err
 	}
