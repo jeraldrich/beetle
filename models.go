@@ -27,10 +27,6 @@ var MessagesMetadata = table.Metadata{
 }
 var MessagesTable = table.New(MessagesMetadata)
 
-// messageTable allows for simple CRUD operations based on messageMetadata.
-// var messagesTable = table.New(MessagesMetadata)
-//  "{\"id\": \"00000000-0000-0000-0000-000000000000\", \"notes\": \"\", \"workout\": {\"id\": \"00000000-0000-0000-0000-000000000000\", \"name\": \"\", \"type\": \"\", \"missed_at\": \"0001-01-01T00:00:00Z\", \"description\": \"\", \"is_optional\": null, \"scheduled_at\": \"0001-01-01T00:00:00Z\", \"activity_type\": \"\", \"trainer_notes\": \"\"}, \"timezone\": \"\", \"difficulty\": null, \"started_at\": \"0001-01-01T00:00:00Z\", \"is_optional\": null, \"completed_at\": \"0001-01-01T00:00:00Z\", \"sets_skipped\": null, \"sets_too_long\": null, \"actual_duration\": 0, \"weights_changed\": null, \"completion_state\": \"\", \"sets_not_started\": null, \"active_sets_total\": 0, \"active_sets_completed\": 0, \"completed_automatically\": false}",
-
 // The message to the serialized from json
 type Message struct {
 	ID                string `json:"id"` // gocql.UUID
