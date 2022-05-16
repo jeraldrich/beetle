@@ -51,14 +51,14 @@ func main() {
 	}
 
 	consumer := NewConsumer()
-	messages, success_count, error_count := consumer.FilterMessages(messages)
+	transformedMessages := []TransformedMessage{}
+	transformedMessages, success_count, error_count := consumer.FilterMessages(messages)
 	log.Printf("Filtered %d messages: success[%d] error_count[%d]", len(messages), success_count, error_count)
 
-	err = consumer.CreateMessages(messages, session)
+	err = consumer.CreateMessages(transformedMessages, session)
 	if err != nil {
 		panic(err)
 	}
-
 }
 
 func InitializeMessagesKeyspace(session gocqlx.Session) (err error) {

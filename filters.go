@@ -23,22 +23,23 @@ func NewFilter() *Filter {
 }
 
 // Scylla uses ISO-8601, but Go uses RFC-3339 time format.
-// Takes a datetime string of any type and convert to ISO-8601 datetime string.
+// Takes a datetime string of any type and convert to ISO-8601 time.Time
 // For datetime strings that specify a location, stored timezone will be preserved.
 // Otherwise, timezone will convert to UTC.
-func (f *Filter) DatetimeString(datetimeInput string) (iso8601String string, err error) {
-	rfcTemplate := "2006-01-02T15:04:05Z"     // RFC 3339
-	isoTemplate := "2018-03-01T22:07:04.074Z" // ISO
+func (f *Filter) DatetimeString(datetimeInput string) (iso8601 time.Time, err error) {
+	rfcTemplate := "2006-01-02T15:04:05Z" // RFC 3339
+	// For returning a zero value time.
+	blankTime := time.Time{}
 
 	if len(datetimeInput) == 0 {
-		return datetimeInput, nil
+		return blankTime, nil
 	}
 
 	isoConvertedInput, err := datetime.Parse(datetimeInput, time.UTC)
 	if err != nil {
 		// TODO: Better exception handling for incorrectly formatted dates.
 		fmt.Printf("Failed converting datetime string to iso8601: [%s]", datetimeInput)
-		return "", err
+		return blankTime, err
 	}
 
 	// If the input matches the converted without microseconds, then return the input.
@@ -47,21 +48,22 @@ func (f *Filter) DatetimeString(datetimeInput string) (iso8601String string, err
 	// add 1-3 microseconds based off duraction of the method.
 	convertedFromIsoToRfc, err := time.Parse(rfcTemplate, isoConvertedInput.Format(rfcTemplate))
 	if isoConvertedInput.Format(rfcTemplate) == convertedFromIsoToRfc.Format(rfcTemplate) {
-		return datetimeInput, err
+		return isoConvertedInput, err
 	}
 
 	// Now that we have a valid iso object,
-	// return as iso8601 string with subseconds.
-	return isoConvertedInput.Format(isoTemplate), err
+	// return as iso8601 with subseconds.
+	return isoConvertedInput, err
 }
 
-func (f *Filter) Uuid(input string) (uuid string, err error) {
-	_, err = gocql.ParseUUID(input)
+func (f *Filter) Uuid(input string) (uuid gocql.UUID, err error) {
+	result, err := gocql.ParseUUID(input)
+
 	if err != nil {
 		fmt.Printf("Invalid UUID %s", input)
-		// var blankUuid [16]byte
-		return input, err
+		var blankUuid [16]byte
+		return blankUuid, err
 	}
 
-	return input, err
+	return result, err
 }
