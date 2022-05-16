@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 )
 
@@ -47,8 +46,6 @@ func (p *Producer) GetMessagesFromUrl(url string) ([]Message, error) {
 		fmt.Println("json decode error ", err)
 		return messages, err
 	}
-
-	log.Println("messages ", messages)
 
 	return messages, err
 }

@@ -30,6 +30,10 @@ func (f *Filter) DatetimeString(datetimeInput string) (iso8601String string, err
 	rfcTemplate := "2006-01-02T15:04:05Z"     // RFC 3339
 	isoTemplate := "2018-03-01T22:07:04.074Z" // ISO
 
+	if len(datetimeInput) == 0 {
+		return datetimeInput, nil
+	}
+
 	isoConvertedInput, err := datetime.Parse(datetimeInput, time.UTC)
 	if err != nil {
 		// TODO: Better exception handling for incorrectly formatted dates.
@@ -51,13 +55,13 @@ func (f *Filter) DatetimeString(datetimeInput string) (iso8601String string, err
 	return isoConvertedInput.Format(isoTemplate), err
 }
 
-func (f *Filter) Uuid(input string) (uuid gocql.UUID, err error) {
-	result, err := gocql.ParseUUID(input)
+func (f *Filter) Uuid(input string) (uuid string, err error) {
+	_, err = gocql.ParseUUID(input)
 	if err != nil {
 		fmt.Printf("Invalid UUID %s", input)
-		var blankUuid [16]byte
-		return blankUuid, err
+		// var blankUuid [16]byte
+		return input, err
 	}
 
-	return result, err
+	return input, err
 }
