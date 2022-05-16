@@ -7,6 +7,7 @@ import (
 
 // TODO:
 // - Handle RFC specific formats that are not ISO supported.
+// TODO: fix time.Time comparison
 func TestDatetimeString(t *testing.T) {
 	var tests = []struct {
 		input string

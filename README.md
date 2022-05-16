@@ -9,6 +9,12 @@ I ran into the same situation with mongo in that after > 1TB+ of data, the read 
 
 I did some research on cassandra and scylla as alternatives, but I found the scylladb query builder makes it easy to grasp for developers not familiar with column store databases: https://github.com/scylladb/gocqlx
 
+### ETL pipeline
+* Messages are retrieved from sources defined in conf.json by a producer that downloads and parses files into data ready to be consumed
+* The producer sends the messages data to a pool of consumer workers that will validate, transform and load the messages into a database
+* Consumer workers clean the messages marking any that does not pass a filter with dirty_fields: true
+* Consumer workers send the failed messages to the failed_imports table and successfull messages to the messages table (todo)
+
 ## Setting Up Local Development Environment
 
 #### Install Dependencies
@@ -36,9 +42,3 @@ This is not necessary to run, but if you want to generate a go file to see all s
 * Install gocqlx's schemagen: `go get -u "github.com/scylladb/gocqlx/v2/cmd/schemagen"`
 * If you have java, make sure you have $GOBIN defined in your path (location to your go bin directory) or you may run java's schemagen
 * generate schema go file: `$GOBIN/schemagen -cluster="127.0.0.1:9042" -keyspace="messages" -output="schema" -pkgname="schema"`
-
-### ETL pipeline
-* Messages are retrieved from sources defined in conf.json by a producer that downloads and parses files into data ready to be consumed
-* The producer sends the messages data to a pool of consumer workers that will validate, transform and load the messages into a database
-* Consumer workers clean the messages marking any that does not pass a filter with dirty_fields: true
-* Consumer workers send the failed messages to the failed_imports table and successfull messages to the messages table
