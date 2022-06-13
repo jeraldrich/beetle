@@ -1,7 +1,7 @@
-Beetle
+Beetle (in development)
 ===================
 
-High performance ETL implemented in golang concurrent fan-out pattern and scylla node clusters (in development).
+High performance ETL implemented in golang concurrent fan-out pattern and scylla node clusters.
 
 
 ### ETL pipeline
