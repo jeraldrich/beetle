@@ -8,7 +8,7 @@ High performance ETL implemented in golang concurrent fan-out pattern and scylla
 * Messages are retrieved from sources defined in conf.json by a producer that downloads and parses files into data ready to be consumed
 * The producer sends the messages data to a pool of consumer workers that will validate, transform and load the messages into a database
 * Consumer workers clean the messages marking any that does not pass a filter with dirty_fields: true
-* Consumer workers send the failed messages to the failed_imports table and successfull messages to the messages table (todo)
+* Consumer workers send the failed messages to the failed_imports table and successful messages to the messages table (todo)
 
 ## Setting Up Local Development Environment
 
